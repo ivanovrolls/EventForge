@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../src/Entity/Event.php';
 header('Content-Type: application/json');
 
 $events = [
@@ -29,7 +30,8 @@ $message = [
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if ($_SERVER['REQUEST_URI'] === "/") {
         echo json_encode($message);
-    } elseif ($_SERVER['REQUEST_URI'] == "/api/events") {
-        echo json_encode($events);
+    } elseif ($_SERVER['REQUEST_URI'] === "/api/events") {
+        $event = new Event(1, 'Amon Amarth', '18/11/2026', 'Madrid');
+        echo json_encode($event);
     }
 }
