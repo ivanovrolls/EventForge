@@ -1,6 +1,8 @@
 <?php
 
-class Event implements JsonSerializable
+namespace App\Entity;
+
+class Event implements \JsonSerializable
 {
     private $id;
     private $performer;

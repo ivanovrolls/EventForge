@@ -1,0 +1,11 @@
+{
+    "name": "ivan/eventforge",
+    "description": "A PHP event ticketing API",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require": {}
+}
