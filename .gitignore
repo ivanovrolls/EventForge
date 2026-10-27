@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS metadata
+._*
+
+# PHP / Composer
+/vendor/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
