@@ -1,23 +1,15 @@
 <?php
 
 use App\Repository\EventRepository;
+use App\Repository\PostgresEventRepository;
 use App\Controller\EventController;
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
-header('Content-Type: application/json');
-
-$message = [
-    'message' => 'Welcome to EventForge'
-];
-
-
-<?php
-
-use App\Repository\EventRepository;
-use App\Controller\EventController;
-
-require_once __DIR__ . '/../vendor/autoload.php';
+$pdo = new PDO(
+    'pgsql:host=localhost;port=5432;dbname=eventforge',
+    'ivanovrolls',
+    ''
+);
 
 header('Content-Type: application/json');
 
@@ -40,7 +32,7 @@ if ($path === '/') {
     }
 } elseif ($path === '/api/events') {
     if ($method === 'GET') {
-        $repo = new EventRepository();
+        $repo = new PostgresEventRepository($pdo);
         $eventCon = new EventController($repo);
         echo json_encode($eventCon->index());
     } else {
