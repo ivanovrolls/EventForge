@@ -1,8 +1,11 @@
 <?php
 namespace App\Repository;
 
+use App\Entity\Event;
+
 interface EventRepositoryInterface {
     public function findAll() : array;
+    public function findById(int $id): ?Event;
 }
 
 /* Interfaces are useful for ensuring a standard is followed across all defined
