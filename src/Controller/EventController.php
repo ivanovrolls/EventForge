@@ -18,4 +18,8 @@ class EventController {
     public function show(int $id): ?Event {
         return $this->repository->findById($id);
     }
+
+    public function create(string $performer, string $date, string $location): Event {
+        return $this->repository->create($performer, $date, $location);
+    }
 }

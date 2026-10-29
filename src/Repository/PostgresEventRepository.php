@@ -47,4 +47,22 @@ class PostgresEventRepository implements EventRepositoryInterface {
         }
         return $events;
     }
+
+    public function create(string $performer, string $date, string $location): Event {
+        $statement = $this->pdo->prepare(
+            'INSERT INTO events (performer, date, location)
+            VALUES (:performer, :date, :location)
+            RETURNING id'
+        );
+
+        $statement->execute([
+            'performer' => $performer,
+            'date' => $date,
+            'location' => $location
+        ]);
+
+        $id = (int) $statement->fetchColumn();
+        $event = new Event($id, $performer, $date, $location);
+        return $event;
+    }
 }

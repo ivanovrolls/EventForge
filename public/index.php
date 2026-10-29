@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Repository\PostgresEventRepository;
@@ -12,7 +13,7 @@ try {
         'pgsql:host=localhost;port=5432;dbname=eventforge',
         'ivanovrolls',
         ''
-    ); 
+    );
 
     $message = [
         'message' => 'Welcome to EventForge'
@@ -32,12 +33,51 @@ try {
             ]);
         }
     } elseif ($path === '/api/events') {
+        $repo = new PostgresEventRepository($pdo);
+        $eventCon = new EventController($repo);
+
         if ($method === 'GET') {
-            $repo = new PostgresEventRepository($pdo);
-            $eventCon = new EventController($repo);
             echo json_encode($eventCon->index());
+        } elseif ($method === 'POST') {
+            $request = json_decode(file_get_contents('php://input'), true);
+
+            if (!is_array($request)) {
+                http_response_code(400);
+                echo json_encode([
+                    'error' => 'Bad Request'
+                ]);
+                exit;
+            }
+
+            $required_fields = ['performer', 'date', 'location'];
+
+            foreach ($required_fields as $field) {
+                if (
+                    !isset($request[$field]) || //field is not set or
+                    !is_string($request[$field]) || //field is not correct data tyoe or
+                    trim($request[$field]) === '' //field is empty
+                ) {
+                    http_response_code(400);
+                    echo json_encode([
+                        'error' => 'Bad Request'
+                    ]);
+                    exit;
+                }
+            }
+
+            //now input is validated so create the event
+            $event = $eventCon->create(
+                $request['performer'],
+                $request['date'],
+                $request['location']
+            );
+
+            //success code
+            http_response_code(201);
+            echo json_encode($event);
+            
         } else {
-            header('Allow: GET');
+            header('Allow: GET, POST');
             http_response_code(405);
             echo json_encode([
                 'error' => 'Method Not Allowed'
@@ -53,7 +93,6 @@ try {
             $event = $eventCon->show($id);
             if ($event !== null) {
                 echo json_encode($event);
-
             } else {
                 http_response_code(404);
                 echo json_encode([
@@ -65,7 +104,7 @@ try {
             http_response_code(405);
             echo json_encode([
                 'error' => 'Method Not Allowed'
-            ]);            
+            ]);
         }
     } else {
         http_response_code(404);

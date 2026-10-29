@@ -6,6 +6,11 @@ use App\Entity\Event;
 interface EventRepositoryInterface {
     public function findAll() : array;
     public function findById(int $id): ?Event;
+    public function create(
+        string $performer,
+        string $date,
+        string $location
+    ): Event;
 }
 
 /* Interfaces are useful for ensuring a standard is followed across all defined
