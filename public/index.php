@@ -65,6 +65,21 @@ try {
                 }
             }
 
+            $date = $request['date'];
+
+            $parsedDate = DateTimeImmutable::createFromFormat('!Y-m-d', $date);
+
+            if (
+                $parsedDate === false ||
+                $parsedDate->format('Y-m-d') !== $date
+            ) {
+                http_response_code(400);
+                echo json_encode([
+                    'error' => 'Invalid date. Expected format: YYYY-MM-DD'
+                ]);
+                exit;
+            }
+
             //now input is validated so create the event
             $event = $eventCon->create(
                 $request['performer'],
@@ -75,7 +90,7 @@ try {
             //success code
             http_response_code(201);
             echo json_encode($event);
-            
+
         } else {
             header('Allow: GET, POST');
             http_response_code(405);
